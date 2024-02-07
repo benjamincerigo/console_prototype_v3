@@ -3,37 +3,36 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 
 
-def get_user(db: Session, user_id: int):
-    return db.query(models.User).filter(models.User.id == user_id).first()
+def get_instance(db: Session, instance_id: int):
+    return db.query(models.Instance).filter(models.Instance.id == instance_id).first()
 
 
-def get_user_by_email(db: Session, email: str):
-    return db.query(models.User).filter(models.User.email == email).first()
+def get_instance_by_name(db: Session, name: str):
+    return db.query(models.Instance).filter(models.Instance.name == name).first()
 
 
-def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.User).offset(skip).limit(limit).all()
+def get_instances(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Instance).offset(skip).limit(limit).all()
 
 
-def create_user(db: Session, user: schemas.UserCreate):
-    fake_hashed_password = user.password + "notreallyhashed"
-    db_user = models.User(email=user.email, hashed_password=fake_hashed_password)
-    db.add(db_user)
+def create_instance(db: Session, instance: schemas.InstanceCreate):
+    db_instance = models.Instance(**instance.dict())
+    db.add(db_instance)
     db.commit()
-    db.refresh(db_user)
-    return db_user
+    db.refresh(db_instance)
+    return db_instance
 
 
-def get_items(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Item).offset(skip).limit(limit).all()
+def get_gathers(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Gather).offset(skip).limit(limit).all()
 
 
-def get_items_for_user(db: Session, user_id: int):
-    return db.query(models.Item).filter(models.Item.owner_id == user_id).all()
+def get_gathers_for_instance(db: Session, instance_id: int):
+    return db.query(models.Gather).filter(models.Gather.instance_id == instance_id).all()
 
-def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
-    db_item = models.Item(**item.dict(), owner_id=user_id)
-    db.add(db_item)
+def create_instance_gather(db: Session, gather: schemas.GatherCreate, instance_id: int):
+    db_gather = models.Gather(**gather.dict(), instance_id=instance_id)
+    db.add(db_gather)
     db.commit()
-    db.refresh(db_item)
-    return db_item
+    db.refresh(db_gather)
+    return db_gather

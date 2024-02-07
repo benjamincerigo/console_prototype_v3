@@ -1,35 +1,42 @@
+import datetime
 from pydantic import BaseModel
 
 
-class ItemBase(BaseModel):
-    title: str
-    description: str | None = None
+class GatherBase(BaseModel):
+    platform: str
+    source: str
+    start_date: datetime.date
+    end_date: datetime.date
+    updating: str | None = None
 
 
-class ItemCreate(ItemBase):
+class GatherCreate(GatherBase):
     pass
 
 
-class Item(ItemBase):
+class Gather(GatherBase):
     id: int
-    owner_id: int
+    created_at: datetime.date
+    last_run_at: datetime.datetime | None = None
 
     class Config:
         orm_mode = True
 
 
-class UserBase(BaseModel):
-    email: str
+class InstanceBase(BaseModel):
+    name: str
+    description: str | None = None
 
 
-class UserCreate(UserBase):
-    password: str
+class InstanceCreate(InstanceBase):
+    pass
 
 
-class User(UserBase):
+class Instance(InstanceBase):
     id: int
-    is_active: bool
-    items: list[Item] = []
+    status: str
+    gathers: list[Gather] = []
+    created_at: datetime.datetime
 
     class Config:
         orm_mode = True

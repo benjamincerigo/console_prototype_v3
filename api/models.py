@@ -1,26 +1,34 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+import datetime
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, DateTime, func
 from sqlalchemy.orm import relationship
 
 from .database import Base
 
 
-class User(Base):
-    __tablename__ = "users"
-
+class Instance(Base):
+    __tablename__ = 'instances'
     id = Column(Integer, primary_key=True)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
-    is_active = Column(Boolean, default=True)
+    name = Column(String(100))
+    description = Column(String(100))
+    status = Column(String(100), default='initializing')
+    created_at = Column(DateTime, default=func.current_timestamp())
+    gathers = relationship("Gather", back_populates="instance")
 
-    items = relationship("Item", back_populates="owner")
 
-
-class Item(Base):
-    __tablename__ = "items"
-
+class Gather(Base):
+    __tablename__ = 'gathers'
     id = Column(Integer, primary_key=True)
-    title = Column(String, index=True)
-    description = Column(String, index=True)
-    owner_id = Column(Integer, ForeignKey("users.id"))
+    created_at = Column(Date, default=datetime.datetime.now)
+    platform = Column(String(50), nullable=False)
+    source = Column(String(50), nullable=False)
+    start_date = Column(Date, nullable=False)
+    end_date = Column(Date, nullable=False)
+    updating = Column(String(50), nullable=True)
+    last_run_at = Column(DateTime, nullable=True)
 
-    owner = relationship("User", back_populates="items")
+    # relationships
+    instance_id = Column(Integer, ForeignKey('instances.id'))
+    instance = relationship("Instance", back_populates="gathers")
+
+
+
