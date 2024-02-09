@@ -13,6 +13,7 @@ class Instance(Base):
     status = Column(String(100), default='initializing')
     created_at = Column(DateTime, default=func.current_timestamp())
     gathers = relationship("Gather", back_populates="instance")
+    instance_runs = relationship("InstanceRun", back_populates="instance")
 
 
 class Gather(Base):
@@ -31,4 +32,10 @@ class Gather(Base):
     instance = relationship("Instance", back_populates="gathers")
 
 
-
+class InstanceRun(Base):
+    __tablename__ = 'instance_runs'
+    id = Column(Integer, primary_key=True)
+    created_at = Column(Date, default=datetime.datetime.now)
+    completed_at = Column(Date, nullable=True)
+    instance_id = Column(Integer, ForeignKey('instances.id'))
+    instance = relationship("Instance", back_populates="instance_runs")

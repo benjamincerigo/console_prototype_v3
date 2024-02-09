@@ -36,3 +36,10 @@ def create_instance_gather(db: Session, gather: schemas.GatherCreate, instance_i
     db.commit()
     db.refresh(db_gather)
     return db_gather
+
+def create_run_for_instance(db: Session, instance_id: int):
+    db_run = models.InstanceRun(instance_id=instance_id)
+    db.add(db_run)
+    db.commit()
+    db.refresh(db_run)
+    return db_run

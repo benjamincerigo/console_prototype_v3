@@ -16,9 +16,10 @@ import { AppProps } from "next/app";
 
 import { ChakraProvider } from "@chakra-ui/react";
 import { Header } from "@components/header";
-import dataProvider from "@refinedev/simple-rest";
 import { appWithTranslation, useTranslation } from "next-i18next";
 import { AppIcon } from "src/components/app-icon";
+
+import { dataProvider } from "../src/rest-data-provider";
 
 const API_URL = "http://localhost:8000";
 
@@ -81,6 +82,14 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                   meta: {
                     canDelete: true,
                   },
+                },
+                {
+                  name: "gathers",
+                  list: "/instances/:instanceid/gathers",
+                  create: "/instances/:instanceid/gathers/create",
+                },
+                {
+                  name: "run",
                 },
               ]}
               options={{

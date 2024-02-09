@@ -58,7 +58,7 @@ def read_instance(instance_id: int, db: Session = Depends(get_db)):
     return db_instance
 
 
-@app.post("/instances/{instance_id}/gathers/", response_model=schemas.Gather)
+@app.post("/instances/{instance_id}/gathers", response_model=schemas.Gather)
 def create_gather_for_instance(
     instance_id: int, gather: schemas.GatherCreate, db: Session = Depends(get_db)
 ):
@@ -67,7 +67,7 @@ def create_gather_for_instance(
 
 @app.get("/instances/{instance_id}/gathers", response_model=list[schemas.Gather])
 def get_gather_for_instance(
-    instance_id: int, db: Session = Depends(get_db)
+        instance_id: int, start: int = 0, end: int = 100, db: Session = Depends(get_db)
 ):
     return crud.get_gathers_for_instance(db=db, instance_id=instance_id)
 
@@ -76,3 +76,9 @@ def get_gather_for_instance(
 def read_gathers(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     gathers = crud.get_gathers(db, skip=skip, limit=limit)
     return gathers
+
+@app.post("/instances/{instance_id}/run", response_model=schemas.Run)
+def create_run_for_instance(instance_id: int, db: Session = Depends(get_db)):
+    return crud.create_run_for_instance(db=db, instance_id=instance_id) 
+
+    

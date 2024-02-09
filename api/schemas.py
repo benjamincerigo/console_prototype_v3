@@ -37,6 +37,24 @@ class Instance(InstanceBase):
     status: str
     gathers: list[Gather] = []
     created_at: datetime.datetime
+    last_run_at: datetime.datetime | None = None
+
+    class Config:
+        orm_mode = True
+
+
+class RunBase(BaseModel):
+    pass
+
+
+class RunCreate(RunBase):
+    pass
+
+
+class Run(RunBase):
+    id: int
+    created_at: datetime.datetime
+    completed_at: datetime.datetime | None = None
 
     class Config:
         orm_mode = True
