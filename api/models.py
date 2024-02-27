@@ -7,11 +7,14 @@ from .database import Base
 
 class Instance(Base):
     __tablename__ = 'instances'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(100))
-    description = Column(String(100))
+    id = Column(String(200), primary_key=True)
+    name = Column(String(200))
+    description = Column(String(300))
     status = Column(String(100), default='initializing')
+    environment_id = Column(String(100))
     created_at = Column(DateTime, default=func.current_timestamp())
+    days_until_pi_expiration = Column(Integer, default=183)
+    days_until_all_data_expiration = Column(Integer, default=183)
     gathers = relationship("Gather", back_populates="instance")
     instance_runs = relationship("InstanceRun", back_populates="instance")
 

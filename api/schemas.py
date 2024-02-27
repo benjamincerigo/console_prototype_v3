@@ -24,8 +24,12 @@ class Gather(GatherBase):
 
 
 class InstanceBase(BaseModel):
+    id: str
     name: str
     description: str | None = None
+    environment_id: str
+    days_until_pi_expiration: int = 183
+    days_until_all_data_expiration: int = 183
 
 
 class InstanceCreate(InstanceBase):
@@ -33,7 +37,6 @@ class InstanceCreate(InstanceBase):
 
 
 class Instance(InstanceBase):
-    id: int
     status: str
     gathers: list[Gather] = []
     created_at: datetime.datetime
